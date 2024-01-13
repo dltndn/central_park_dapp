@@ -19,10 +19,12 @@ contract ParkingLot is ERC721, Ownable {
 
     mapping(uint => SpotState) public spotManager; // tokenId별 현재 상태
 
-    constructor(address initialOwner, string memory name_, string memory symbol_)
+    constructor(string memory name_, string memory symbol_)
         ERC721(name_, symbol_)
-        Ownable(initialOwner)
-    {}
+        Ownable(_msgSender())
+    {
+        parkingLotCode = name_;
+    }
 
     function safeMint(address _to, address _rentalContract) public onlyOwner {
         uint256 tokenId = nextTokenId++;
@@ -35,10 +37,10 @@ contract ParkingLot is ERC721, Ownable {
     /**
      * @dev rental컨트랙만 실행가능한 주차자리 상태 업데이트 함수
      */
-    function updateSpotState(uint _tokenId, address _usableAdress, uint _totalIncome) external {
+    function updateSpotState(uint _tokenId, address _usableAdress, uint _income) external {
         require(_msgSender() == spotManager[_tokenId].rentalContract, "Sender is wrong.");
         spotManager[_tokenId].usableAdress = _usableAdress;
-        spotManager[_tokenId].totalIncome = _totalIncome;
+        spotManager[_tokenId].totalIncome += _income;
     }
 
     /**
