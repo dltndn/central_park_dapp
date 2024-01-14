@@ -53,7 +53,7 @@ contract Rental is ParkingLot {
      * @dev 관리자만 실행가능한 주차자리 상태 업데이트 함수
      */
     function settle() external {
-        address msgSender = _msgSender();
+        address payable msgSender = payable(address(uint160(msg.sender)));
         require(msgSender == parkingLotContract.ownerOf(tokenId), "Only owner can settle.");
         require(block.timestamp > expiryTime, "You can settle after the expiration time.");
         require(renter != address(0), "Renter is empty.");
@@ -68,11 +68,16 @@ contract Rental is ParkingLot {
         require(success);
         expiryTime = 0;
         renter = address(0);
-        msgSender.transfer(price);
+        msgSender.transfer(depositAmount);
         price = 0;
+        depositAmount = 0;
     }
 
     function getParkingLotCode() view external returns(string memory){
         return parkingLotContract.parkingLotCode();
+    }
+
+    function setTokenId(uint _tokenId) external onlyOwner {
+        tokenId = _tokenId;
     }
 }
