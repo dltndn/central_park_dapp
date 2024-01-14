@@ -66,10 +66,9 @@ contract ParkingLot is ERC721, Ownable {
             revert ERC721IncorrectOwner(from, tokenId, previousOwner);
         }
         // 이하 추가된 코드
-        if (spotManager[tokenId].usableAdress != previousOwner) {
-            revert ERC721IncorrectOwner(from, tokenId, previousOwner); // 임시
+        if (spotManager[tokenId].usableAdress == previousOwner) {
+            spotManager[tokenId].usableAdress = to;
         }
-        spotManager[tokenId].usableAdress = to;
         spotManager[tokenId].totalIncome = 0;
     }
 }

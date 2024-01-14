@@ -12,9 +12,8 @@ contract Rental is ParkingLot {
     uint public tokenId; // tokenId
     uint private depositAmount; // renter가 납부한 코인 수량
 
-    constructor(uint _tokenId, string memory _parkingLotCode, ParkingLot _parkingLotContract) ParkingLot("", "") {
+    constructor(uint _tokenId, ParkingLot _parkingLotContract) ParkingLot("", "") {
         tokenId = _tokenId;
-        parkingLotCode = _parkingLotCode;
         parkingLotContract = _parkingLotContract;
     }
 
@@ -23,6 +22,7 @@ contract Rental is ParkingLot {
      */
     function register(uint _expiryTime, uint _price) external {
         require(_msgSender() == parkingLotContract.ownerOf(tokenId), "Only owner can register.");
+        require(renter == address(0), "Someone has already rented.");
         expiryTime = _expiryTime;
         price = _price;
     }
@@ -63,6 +63,7 @@ contract Rental is ParkingLot {
             )
         );
         require(success);
+        expiryTime = 0;
         renter = address(0);
         price = 0;
     }
