@@ -23,6 +23,8 @@ contract Rental is ParkingLot {
     function register(uint _expiryTime, uint _price) external {
         require(_msgSender() == parkingLotContract.ownerOf(tokenId), "Only owner can register.");
         require(renter == address(0), "Someone has already rented.");
+        require(block.timestamp < _expiryTime, "You can register the expiration time if it is bigger than current time.");
+        require(_price > 0, "Price must be bigger than 0");
         expiryTime = _expiryTime;
         price = _price;
     }
@@ -51,20 +53,22 @@ contract Rental is ParkingLot {
      * @dev 관리자만 실행가능한 주차자리 상태 업데이트 함수
      */
     function settle() external {
-        require(_msgSender() == parkingLotContract.ownerOf(tokenId), "Only owner can settle.");
+        address msgSender = _msgSender();
+        require(msgSender == parkingLotContract.ownerOf(tokenId), "Only owner can settle.");
         require(block.timestamp > expiryTime, "You can settle after the expiration time.");
         require(renter != address(0), "Renter is empty.");
         (bool success, ) = address(parkingLotContract).call(
             abi.encodeWithSignature(
                 "updateSpotState(uint256,address,uint256)",
                 tokenId,
-                _msgSender(),
+                msgSender,
                 price
             )
         );
         require(success);
         expiryTime = 0;
         renter = address(0);
+        msgSender.transfer(price);
         price = 0;
     }
 
