@@ -1,10 +1,7 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
-
-	"github.com/dltndn/server/controllers"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -39,7 +36,7 @@ func main() {
 		})
 	})
 
-	// r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
-	test := controllers.GetOwnSpot("")
-	fmt.Println("test:", test)
+	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	// test := controllers.GetOwnSpot("")
+	// fmt.Println("test:", test)
 }

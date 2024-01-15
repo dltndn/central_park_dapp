@@ -19,3 +19,5 @@
 /contract/cache
 /contract/artifacts
 /contract/node_modules
+
+*.env

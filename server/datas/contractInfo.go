@@ -5,10 +5,10 @@ type parkingCaStruct struct {
 	rentalAddress   []string
 }
 
-var caInfo = [1]parkingCaStruct{{contractAddress: "0x", rentalAddress: []string{"0x1"}}}
+var caInfo = [1]parkingCaStruct{{contractAddress: "0x13BE3A8531b47921DC2C3910bB016836422c72a6", rentalAddress: []string{"0x1"}}}
 
-func GetParkingLotContracts() [1]parkingCaStruct {
-	return caInfo
+func GetParkingLotContracts() string {
+	return caInfo[0].contractAddress
 }
 
 func GetRentalContracts(caAddress string) []string {
@@ -19,3 +19,5 @@ func GetRentalContracts(caAddress string) []string {
 	}
 	return nil
 }
+
+//(c *parkingCaStruct)
